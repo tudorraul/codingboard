@@ -15,10 +15,10 @@ class CodingBoardServlet(boards: CodingBoards = CodingBoards.instance) extends C
   }
 
   get("/createboard") {
-    contentType = null
-    findTemplate(requestPath) map { path =>
-      contentType = "text/html"
-      layoutTemplate(path)
+    contentType = "text/html"
+    findTemplate(requestPath) map {
+      path =>
+        layoutTemplate(path)
     }
   }
 
@@ -37,6 +37,11 @@ class CodingBoardServlet(boards: CodingBoards = CodingBoards.instance) extends C
 
   get("/boards/:board/codesnippet") {
     codeSnippetFormFor(params("board"))
+  }
+
+  get("/boards/:board/codesnippet/:snippetId/delete") {
+    deleteSnippetFromBoard(params("board"), params("snippetId"))
+    redirect("/boards/" + params("board"))
   }
 
   notFound {

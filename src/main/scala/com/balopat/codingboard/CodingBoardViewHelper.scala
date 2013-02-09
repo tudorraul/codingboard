@@ -78,4 +78,11 @@ with JacksonJsonSupport {
     contentType = "text/html"
     jade("index", ("boards" -> boards.list :: extraAttributes.toList).toArray: _*)
   }
+
+  def deleteSnippetFromBoard(boardUrl: String, snippetId: String) = {
+    val board: CodingBoard = boards.get(boardUrl)
+    if(board != null){
+      board.removeSnippetById(snippetId)
+    }
+  }
 }

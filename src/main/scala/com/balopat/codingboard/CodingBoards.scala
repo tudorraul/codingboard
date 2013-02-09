@@ -2,18 +2,18 @@ package com.balopat.codingboard
 
 import scala.collection.mutable.Map
 import scala.collection.immutable.List
-import actors.{Actor,TIMEOUT}
+import actors.{Actor, TIMEOUT}
 import Actor._
 
-object CodingBoards  {
-  def instance = new CodingBoards() 
+object CodingBoards {
+  def instance = new CodingBoards()
 }
 
 class CodingBoards {
 
   private val boards = Map[String, CodingBoard]()
 
-  def create(boardName:String, lengthOfSessionInMillis: Long, creationTimeInMillis: Long) = {
+  def create(boardName: String, lengthOfSessionInMillis: Long, creationTimeInMillis: Long) = {
     val board = new CodingBoard(boardName, lengthOfSessionInMillis, creationTimeInMillis)
     boards += (board.url -> board)
     actor {
@@ -24,29 +24,31 @@ class CodingBoards {
     board
   }
 
-  def get(boardURL: String) =  boards(boardURL)
+  def get(boardURL: String) = boards(boardURL)
+
   def exists(boardURL: String) = boards.contains(boardURL)
+
   def list = boards.values
+
   def remove(boardURL: String) = boards.remove(boardURL)
 
   private val boardNameValidations = List[(String, String => Boolean)](
-        ("Board name cannot be empty", (name: String) => name == null || name.isEmpty),
-        ("Board already exists", (name: String) => exists(name))
-      )
+    ("Board name cannot be empty", (name: String) => name == null || name.isEmpty),
+    ("Board already exists", (name: String) => exists(name))
+  )
 
   private val lengthOfSessionValidations = List[(String, String => Boolean)](
-      ("Length of session cannot be empty", (lengthOfSession: String) => 
-        lengthOfSession == null || lengthOfSession.isEmpty),
-      ("Please provide an integer value for length of session!", (lengthOfSession: String) => 
-        {
-          try{
-              lengthOfSession.toInt
-              false
-          } catch {
-            case _: NumberFormatException => true
-          }
-        }) 
-    )
+    ("Length of session cannot be empty", (lengthOfSession: String) =>
+      lengthOfSession == null || lengthOfSession.isEmpty),
+    ("Please provide an integer value for length of session!", (lengthOfSession: String) => {
+      try {
+        lengthOfSession.toInt
+        false
+      } catch {
+        case _: NumberFormatException => true
+      }
+    })
+  )
 
   def validate(board: String, lengthOfSession: String) = {
     Seq(

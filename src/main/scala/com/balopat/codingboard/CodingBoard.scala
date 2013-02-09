@@ -2,9 +2,12 @@ package com.balopat.codingboard
 
 
 case class CodingBoard (board: String, lengthOfSessionInMillis: Long, creationTimeInMillis: Long) {
-
   var codeSnippets = List[CodeSnippet]()
-  
+
+  def removeSnippetById(snippetId: String): Unit = {
+    codeSnippets = codeSnippets.filter(_.id != snippetId)
+  }
+
   def += (codeSnippet : CodeSnippet): CodingBoard = {
     if (codeSnippets.filter( _.id.equals(codeSnippet.id)).isEmpty) 
       codeSnippets :+= codeSnippet
